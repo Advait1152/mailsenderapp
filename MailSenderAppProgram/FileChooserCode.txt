@@ -1,0 +1,5 @@
+JFileChooser fn=new JFileChooser();
+        fn.showOpenDialog(null);
+        File f=fn.getSelectedFile();
+        fname=f.getAbsolutePath();
+        fp.setText(fname);

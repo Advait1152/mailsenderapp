@@ -1,0 +1,57 @@
+private static void sendAttachments(String message, String subject, String to, String from) {
+		
+		Properties properties = new Properties();
+
+		properties.put("mail.smtp.host", "smtp.mail.com");
+		properties.put("mail.smtp.ssl.enable", "true");
+		properties.put("mail.smtp.auth", "true");
+		properties.put("mail.smtp.port", "465");
+
+		// Step 1: get session object
+		Session session = Session.getInstance(properties, new Authenticator() {
+
+			@Override
+			protected PasswordAuthentication getPasswordAuthentication() {
+				// TODO Auto-generated method stub
+				return new PasswordAuthentication(from, "your_password");
+			}
+
+		});
+
+		// Step 2: compose the message
+		MimeMessage msg = new MimeMessage(session);
+
+		try {
+			msg.setFrom(from);// from email
+			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+			msg.setSubject(subject);
+
+			String path = "D:\\My Phtotos\\Camera\\57ad6deb-03a6-4d65-811e-fed66ba75cb0.jpg";
+
+			MimeMultipart mime = new MimeMultipart();
+
+			MimeBodyPart text = new MimeBodyPart();
+
+			MimeBodyPart attach = new MimeBodyPart();
+
+			try {
+				text.setText(message);
+
+				File file = new File(path);
+				attach.attachFile(file);
+
+				mime.addBodyPart(text);
+				mime.addBodyPart(attach);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			msg.setContent(mime);
+			// Step 3: send message using transport class
+			Transport.send(msg);
+			System.out.println("Mail Send");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
